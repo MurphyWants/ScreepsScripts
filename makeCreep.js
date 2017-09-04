@@ -13,3 +13,5 @@ var makeCreep = {
     }
 
 }
+
+module.exports = makeCreep;
