@@ -9,17 +9,13 @@ var harvestToHome = {
         if (creep.memory.sourceTo == undefined)
             creep.memory.sourceTo = false;
 
-        if (creep.memory.targetSource == undefined)
-            creep.memory.targetSource = creep.room.find(FIND_SOURCES).sort(function(a, b) {
-                return (a.energy - b.energy)
-            })[1];
-
         if (!creep.memory.sourceTo) {
             creep.memory.targetSource = creep.room.find(FIND_SOURCES).sort(function(a, b) {
                 return (a.energy - b.energy)
             })[1];
             creep.memory.sourceTo = true;
         }
+        
         if (!creep.memory.isFull) {
             okSay.run(creep, 'HH:Source');
             if (creep.harvest(sources) == ERR_NOT_IN_RANGE) {
