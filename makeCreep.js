@@ -1,17 +1,25 @@
 var makeCreep = {
-    /** @param {Creep} creep **/
-    run: function(type, spawn, extra) {
-      var harvestToHomeRoles = "WORK, CARRY, MOVE";
-      var name = "harvestToHome" + Game.time
-        switch type {
+    run: function(roleType, spawn) {
+        var name = roleType + Game.time;
+        switch (roleType) {
             case 'harvestToHome':
-              Game.spawns[spawn].createCreep([harvestToHomeRoles], name, {role: type, creepSpawn: spawn, extraVar: extra});
+                Game.spawns[spawn].createCreep([WORK, CARRY, MOVE], name, {
+                    role: roleType,
+                    creepSpawn: spawn,
+                });
                 break;
-            default:
-                break;
+            case 'harvestToController':
+                Game.spawns[spawn].createCreep([WORK, CARRY, MOVE], name, {
+                    role: roleType,
+                    creepSpawn: spawn,
+                });
+            case 'builder':
+                Game.spawns[spawn].createCreep([WORK, CARRY, MOVE], name, {
+                    role: roleType,
+                    creepSpawn: spawn,
+                });
         }
     }
-
 }
 
 module.exports = makeCreep;

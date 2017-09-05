@@ -1,7 +1,18 @@
+
 var roleHarvester = require('role.harvester');
-var respawnCreeps = require('replaceScreeps');
+var roleHarvestToHome = require('role.harvestToHome');
+var roleHarvestToController = require('role.harvestToController');
+var roleBuilder = require('role.builder');
+global.respawnCreeps = require('replaceScreeps');
+global.makeCreep = require('makeCreep');
+global.okSay = require('oksay');
 
 module.exports.loop = function() {
+  /*if(Memory.MainPause == undefined)
+     Memory.MainPause = false;
+
+  if(Memory.MainPause)
+     return*/
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
         switch (creep.memory.role) {
@@ -10,11 +21,18 @@ module.exports.loop = function() {
                 roleHarvester.run(creep);
                 break;
             case 'harvestToHome':
-                creep.say('harvestToHome')
+                //creep.say('H_Home')
                 roleHarvestToHome.run(creep);
                 break;
+            case 'harvestToController':
+                roleHarvestToController.run(creep);
+                break;
+            case 'builder':
+              roleBuilder.run(creep);
+              break;
             default:
                 creep.say('No Role');
         }
     }
+    respawnCreeps.run();
 }
