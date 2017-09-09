@@ -1,0 +1,1 @@
+global.okSay = require('oksay');
