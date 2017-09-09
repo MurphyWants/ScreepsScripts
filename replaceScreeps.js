@@ -1,9 +1,11 @@
 // Game.spawns['HomeS'].createCreep([WORK, CARRY, MOVE], 'Harvester1', {role: 'harvester'});
 var replaceScreeps = {
     run: function() {
-        var numberHarvestToHome = 7;
-        var numberHarvestToController = 5;
-        var numberBuilder = 5;
+        var numberHarvestToHome = 5;
+        var numberHarvestToController = 2;
+        var numberBuilder = 3;
+        var numberRepairer = 2;
+        var mainSpawn = "0.0";
 
         for (var i in Memory.creeps) {
             var creep = Game.creeps[i];
@@ -15,14 +17,18 @@ var replaceScreeps = {
         }
 
         if (_.sum(Game.creeps, (c) => c.memory.role == 'harvestToHome') < numberHarvestToHome)
-            makeCreep.run('harvestToHome', 'HomeS');
+            makeCreep.run('harvestToHome', mainSpawn);
 
         if (_.sum(Game.creeps, (c) => c.memory.role == 'harvestToController') < numberHarvestToController) {
-            makeCreep.run('harvestToController', 'HomeS');
+            makeCreep.run('harvestToController', mainSpawn);
         }
 
         if (_.sum(Game.creeps, (c) => c.memory.role == 'builder') < numberBuilder) {
-            makeCreep.run('builder', 'HomeS');
+            makeCreep.run('builder', mainSpawn);
+        }
+
+        if (_.sum(Game.creeps, (c) => c.memory.role == 'repairer') < numberRepairer) {
+            makeCreep.run('repairer', mainSpawn);
         }
 
     }

@@ -1,7 +1,7 @@
 /* Purpose: Just harvesting to spawn */
-var harvestToHome = {
+var roleRepairer = {
     run: function(creep) {
-        var sources = creep.room.find(FIND_SOURCES)[0];
+        var sources = creep.room.find(FIND_SOURCES)[1];
         //creep.pos.findClosestByRange(FIND_SOURCES);
         var home = Game.spawns[creep.memory.creepSpawn];
         if (creep.memory.isFull == undefined)
@@ -18,7 +18,7 @@ var harvestToHome = {
         }
 
         if (!creep.memory.isFull) {
-            okSay.run(creep, 'HH:Source');
+            okSay.run(creep, 'R:Source');
             if (creep.harvest(sources) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(sources, {
                     visualizePathStyle: {
@@ -30,18 +30,24 @@ var harvestToHome = {
                 creep.memory.isFull = true;
         }
 
-        var target = creep.room.find(FIND_STRUCTURES, {
+      /*  var target = creep.room.find(FIND_STRUCTURES, {
             filter: (structure) => {
                 return ((structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == STRUCTURE_SPAWN) &&
                     structure.energy < structure.energyCapacity)
             }
-        }) //Need to fix target code
+        }) //Need to fix target code*/
+
+        var target = creep.pos.findClosestByRange(Game.STRUCTURES, {
+          filter: function(structure){
+            return structure.hits < structure.hitMax / 2;
+          }
+        });
 
         if (creep.memory.isFull) {
-            okSay.run(creep, 'HH:Home');
-            if (creep.transfer(target[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target[0], {
+            okSay.run(creep, 'R:Home');
+            if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {
                     visualizePathStyle: {
                         stroke: '#008000'
                     }
@@ -52,7 +58,14 @@ var harvestToHome = {
                 creep.memory.sourceTo = false;
             }
         }
+        if (target == null){
+          creep.moveTo(Game.flags["0.0Safe"], {
+            visualizePathStyle: {
+              stroke: '#9400d3'
+            }
+          });
+        }
     }
 }
 
-module.exports = harvestToHome;
+module.exports = roleRepairer;

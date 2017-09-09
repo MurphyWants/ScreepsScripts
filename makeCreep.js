@@ -13,11 +13,19 @@ var makeCreep = {
                     role: roleType,
                     creepSpawn: spawn,
                 });
+                break;
             case 'builder':
                 Game.spawns[spawn].createCreep([WORK, CARRY, MOVE], name, {
                     role: roleType,
                     creepSpawn: spawn,
                 });
+                break;
+            case 'repairer':
+                Game.spawns[spawn].createCreep([WORK, CARRY, MOVE], name, {
+                    role: roleType,
+                    creepSpawn: spawn,
+                });
+                break;
         }
     }
 }

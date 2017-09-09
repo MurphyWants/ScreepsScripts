@@ -1,7 +1,8 @@
 /* Purpose: Just harvesting to controller */
 var harvestToController = {
     run: function(creep) {
-        var sources = creep.pos.findClosestByRange(FIND_SOURCES);
+        var sources = creep.room.find(FIND_SOURCES)[1];
+        //creep.pos.findClosestByRange(FIND_SOURCES);
         var home = Game.spawns[creep.memory.creepSpawn];
         if (creep.memory.isFull == undefined)
             creep.memory.isFull = false;

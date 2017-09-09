@@ -1,6 +1,7 @@
 var roleBuilder = {
     run: function(creep) {
-        var sources = creep.pos.findClosestByRange(FIND_SOURCES);
+        var sources = creep.room.find(FIND_SOURCES)[1];
+        //creep.pos.findClosestByRange(FIND_SOURCES);
         if (creep.memory.isFull == undefined)
             creep.memory.isFull = false;
 

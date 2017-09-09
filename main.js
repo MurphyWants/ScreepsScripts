@@ -3,9 +3,11 @@ var roleHarvester = require('role.harvester');
 var roleHarvestToHome = require('role.harvestToHome');
 var roleHarvestToController = require('role.harvestToController');
 var roleBuilder = require('role.builder');
+var roleRepairer = require('role.repairer')
 global.respawnCreeps = require('replaceScreeps');
 global.makeCreep = require('makeCreep');
 global.okSay = require('oksay');
+global.testfile = require('testfile');
 
 module.exports.loop = function() {
   /*if(Memory.MainPause == undefined)
@@ -29,6 +31,9 @@ module.exports.loop = function() {
                 break;
             case 'builder':
               roleBuilder.run(creep);
+              break;
+            case 'repairer':
+              roleRepairer.run(creep);
               break;
             default:
                 creep.say('No Role');
