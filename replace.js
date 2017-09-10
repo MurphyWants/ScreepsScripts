@@ -1,5 +1,4 @@
 module.exports = function() {
-  console.log("Replace script running");
     //console.log("Rplace filler");
     for (var i in Game.rooms) {
         /* Saved values for each needed variable */

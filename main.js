@@ -12,6 +12,6 @@ module.exports.loop = function() {
         if (!(role == "none"))
             creepRoles[role][0](creep);
     }
-    if(!(Game.time % 30))
+    if(!(Game.time % 10))
       replace();
 }

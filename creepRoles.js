@@ -19,6 +19,7 @@ module.exports = {
             if (!creep.memory.isFull) {
                 if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(src, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#32CD32'
                         }
@@ -31,9 +32,11 @@ module.exports = {
             if (creep.memory.isFull) {
                 if (creep.transfer(home, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(home, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#008000'
                         }
+                        //
                     });
                 }
 
@@ -51,9 +54,11 @@ module.exports = {
                 case 0:
                     return 4;
                 case 1:
-                    return 6;
+                    return 3;
+                case 2:
+                    return 1;
                 default:
-                    return 6;
+                    return 1;
             }
         },
 
@@ -61,7 +66,12 @@ module.exports = {
             var level = roomVars[room][2];
 
             switch (level) {
-                default: return [WORK, CARRY, MOVE];
+                case 3:
+                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
+                case 4:
+                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+                default:
+                    return [WORK, CARRY, MOVE]; // 200 pts
             }
         }
     ],
@@ -78,6 +88,7 @@ module.exports = {
             if (!creep.memory.isFull) {
                 if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(src, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#32CD32'
                         }
@@ -92,6 +103,7 @@ module.exports = {
             if (creep.memory.isFull) {
                 if (target[0] == undefined) {
                     creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#9400d3'
                         }
@@ -101,6 +113,7 @@ module.exports = {
                     creep.memory.isFull = false;
                 if (creep.build(target[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target[0], {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#000000'
                         }
@@ -126,7 +139,12 @@ module.exports = {
             var level = roomVars[room][2];
 
             switch (level) {
-                default: return [WORK, CARRY, MOVE];
+                case 3:
+                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
+                case 4:
+                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+                default:
+                    return [WORK, CARRY, MOVE]; // 200 pts
             }
         }
     ],
@@ -142,6 +160,7 @@ module.exports = {
             if (!creep.memory.isFull) {
                 if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(src, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#32CD32'
                         }
@@ -154,6 +173,7 @@ module.exports = {
             if (creep.memory.isFull) {
                 if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(creep.room.controller, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#008000'
                         }
@@ -186,7 +206,12 @@ module.exports = {
             var level = roomVars[room][2];
 
             switch (level) {
-                default: return [WORK, CARRY, MOVE];
+                case 3:
+                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
+                case 4:
+                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+                default:
+                    return [WORK, CARRY, MOVE]; // 200 pts
             }
         }
     ],
@@ -202,6 +227,7 @@ module.exports = {
             if (!creep.memory.isFull) {
                 if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(src, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#32CD32'
                         }
@@ -213,20 +239,33 @@ module.exports = {
 
             var target = creep.pos.findClosestByRange(Game.STRUCTURES, {
                 filter: function(structure) {
-                    return structure.hits < (structure.hitMax * (3/4));
+                    return structure.hits < (structure.hitMax * (3 / 4));
                 }
             });
 
             if (creep.memory.isFull) {
                 if (target == null) {
-                    creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
-                        visualizePathStyle: {
-                            stroke: '#9400d3'
-                        }
-                    });
+                    target = creep.room.find(FIND_CONSTRUCTION_SITES);
+                    if (target[0] == undefined) {
+                        creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
+                             reusePath: 25,
+                            visualizePathStyle: {
+                                stroke: '#9400d3'
+                            }
+                        });
+                    } else if (creep.build(target[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target[0], {
+                             reusePath: 25,
+                            visualizePathStyle: {
+                                stroke: '#000000'
+                            }
+                        });
+                    }
+
                 }
                 if (creep.repair(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#008000'
                         }
@@ -249,9 +288,9 @@ module.exports = {
                 case 1:
                     return 1;
                 case 2:
-                    return 1;
+                    return 2;
                 default:
-                    return 1;
+                    return 2;
             }
         },
 
@@ -259,7 +298,12 @@ module.exports = {
             var level = roomVars[room][2];
 
             switch (level) {
-                default: return [WORK, CARRY, MOVE];
+                case 3:
+                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
+                case 4:
+                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+                default:
+                    return [WORK, CARRY, MOVE]; // 200 pts
             }
         }
     ],
@@ -275,6 +319,7 @@ module.exports = {
             if (!creep.memory.isFull) {
                 if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(src, {
+                         reusePath: 25,
                         visualizePathStyle: {
                             stroke: '#32CD32'
                         }
@@ -295,17 +340,29 @@ module.exports = {
                 if (target.length > 0) {
                     if (creep.transfer(target[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(target[0], {
+                             reusePath: 25,
                             visualizePathStyle: {
                                 stroke: '#008000'
                             }
                         });
                     }
                 } else {
-                    creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
-                        visualizePathStyle: {
-                            stroke: '#9400d3'
-                        }
-                    });
+                    target = creep.room.find(FIND_CONSTRUCTION_SITES);
+                    if (target[0] == undefined) {
+                        creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
+                             reusePath: 25,
+                            visualizePathStyle: {
+                                stroke: '#9400d3'
+                            }
+                        });
+                    } else if (creep.build(target[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target[0], {
+                             reusePath: 25,
+                            visualizePathStyle: {
+                                stroke: '#000000'
+                            }
+                        });
+                    }
                 }
 
                 if (creep.carry.energy == 0)
@@ -324,7 +381,7 @@ module.exports = {
                 case 1:
                     return 2;
                 case 2:
-                    return 6;
+                    return 4;
                 default:
                     return 6;
             }
@@ -334,7 +391,12 @@ module.exports = {
             var level = roomVars[room][2];
 
             switch (level) {
-                default: return [WORK, CARRY, MOVE];
+                case 3:
+                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
+                case 4:
+                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+                default:
+                    return [WORK, CARRY, MOVE]; // 200 pts
             }
         }
     ]
