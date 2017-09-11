@@ -239,7 +239,7 @@ module.exports = {
 
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: function(structure) {
-                    return structure.hits < (structure.hitMax * (3 / 4));
+                    return structure.hits < 1000;
                 }
             });
 

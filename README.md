@@ -269,6 +269,7 @@ What I want to do later, after thinking this out
   - Needed
     - Controller Level 3
     - Max Extensions Built
+  - Spawner: 300 Energy + 10 Extensions 50 Each = 800 Total
 
 # Functions and other scripts used
 
