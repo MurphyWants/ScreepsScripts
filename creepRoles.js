@@ -237,7 +237,7 @@ module.exports = {
                     creep.memory.isFull = true;
             }
 
-            var target = creep.pos.findClosestByRange(Game.STRUCTURES, {
+            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: function(structure) {
                     return structure.hits < (structure.hitMax * (3 / 4));
                 }
