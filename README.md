@@ -8,8 +8,6 @@ Work in progress scripts for the game screeps Most of this was thrown together t
 
   - Ex: Get sources routine should be a function and not the same block of code over and over
 
-- Get rid of harvester-home eventually, doesn't serve a 100% useful purpose
-
 - Fix num to build to be more realistic
 
 - Fix parts to be more efficient and make bigger creeps
@@ -21,28 +19,6 @@ Work in progress scripts for the game screeps Most of this was thrown together t
 - Figure out an offensive and defensive strategy
 
 Roles are in order that I defined them in creepRoles.js. Pardon if it seems like it is disorganized, will reorganize later.
-
-## harvester-home
-
-Description: Specifically a harvester role to fill energy to the spawner. Used early game, but in retrospect probably not useful. Will deprecate.
-
-- Routines
-
-  - Fill Energy from Source
-  - Fill Energy to spawn
-
-- Num to build - level:number
-
-  - 0:4
-  - 1:3
-  - 2:1
-  - default:1
-
-- Parts to build - level:[parts]
-
-  - 3:[WORK, CARRY, CARRY, MOVE, MOVE]
-  - 4:[WORK, WORK, CARRY, CARRY, MOVE, MOVE]
-  - Default:[WORK, CARRY, MOVE]
 
 ## builder
 
@@ -167,9 +143,7 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 0
 
-  - Creep Builds - Total: 4
-
-    - Harvester-Home: 4
+  - Creep Builds - Total: 0
 
   - Creep Parts
 
@@ -177,9 +151,8 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 1
 
-  - Creep Builds - Total: 11
+  - Creep Builds - Total: 8
 
-    - Harvester-Home: 3
     - Builder: 2
     - Harvest-Controller: 3
     - Repairer: 1
@@ -191,9 +164,8 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 2
 
-  - Creep Builds - Total: 15
+  - Creep Builds - Total: 14
 
-    - Harvester-Home: 1
     - Builder: 3
     - Harvest-Controller: 5
     - Repairer: 2
@@ -205,9 +177,8 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 3
 
-  - Creep Builds - Total: 17
+  - Creep Builds - Total: 16
 
-    - Harvester-Home: 1
     - Builder: 3
     - harvest-controller: 5
     - Repairer: 2
@@ -219,9 +190,8 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 4
 
-  - Creep Builds - Total: 17
+  - Creep Builds - Total: 16
 
-    - Harvester-Home: 1
     - Builder: 3
     - harvest-controller: 5
     - Repairer: 2
