@@ -2,8 +2,9 @@
 global.roomVars = require('rooms');
 global.creepRoles = require('creepRoles');
 global.replace = require('replace');
+global.creepRoutineFunctions = require('creepRoutineFunctions');
 try {
-  global.creepRoutineFunctions = require('creepRoutineFunctions');
+  global.towerFunctions = require('towerFunctions');
 }
 catch(err){
   console.log(err);
@@ -20,4 +21,6 @@ module.exports.loop = function() {
   }
   if (!(Game.time % 10))
     replace();
+
+  towerFunctions();
 }

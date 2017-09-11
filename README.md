@@ -3,10 +3,8 @@ Work in progress scripts for the game screeps Most of this was thrown together t
 # Creep Roles
 
 ## TODO
-
-- Rewrite routines to be more modular and less inline
-
-  - Ex: Get sources routine should be a function and not the same block of code over and over
+- Write better tower functions
+	- Right now it just repairs
 
 - Fix num to build to be more realistic
 
@@ -177,12 +175,12 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 3
 
-  - Creep Builds - Total: 16
+  - Creep Builds - Total: 14
 
     - Builder: 3
     - harvest-controller: 5
     - Repairer: 2
-    - Harvest-General: 6
+    - Harvest-General: 4
 
   - Creep Parts
 

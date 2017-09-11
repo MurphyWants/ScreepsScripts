@@ -19,10 +19,19 @@ module.exports = {
       if (creep.memory.isFull == undefined)
         creep.memory.isFull = false;
 
-      if (!creep.memory.isFull) {
+      if (!creep.memory.isFull) { // Fill energy
         creepRoutineFunctions.harvest(creep, src, harvest_color);
-      } else {
-        creepRoutineFunctions.build_to(creep, target, build_color);
+      } else { // Energy is filled
+        if (target == null) { // Check if there is anything to build
+          target = creepRoutineFunctions.find_repair(creep);
+          if (target == null) { // Check if there is anything to repair
+            creepRoutineFunctions.upgrade_controller(creep); // Nothing to repair, go help build controller
+          } else { // There was something to repair
+            creepRoutineFunctions.repair_to(creep, target);
+          }
+        } else { // There was something to build
+          creepRoutineFunctions.build_to(creep, target, build_color);
+        }
       }
     },
     function(room) { //num to build
@@ -47,7 +56,7 @@ module.exports = {
         case 2:
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]; //550 pts
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -93,7 +102,7 @@ module.exports = {
         case 2:
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]; //550 pts
+          return [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -111,12 +120,20 @@ module.exports = {
       if (creep.memory.isFull == undefined)
         creep.memory.isFull = false;
 
-      if (!creep.memory.isFull) {
+      if (!creep.memory.isFull) { // Fill Energy
         creepRoutineFunctions.harvest(creep, src, harvest_color);
-      } else {
-        creepRoutineFunctions.repair_to(creep, target, repair_color);
+      } else { // Once filled, go repair
+        if (target == null) { // if nothing to repair, find something to build
+          target = creepRoutineFunctions.find_build(creep);
+          if (target == null) { // If there is nothing to build, go help upgrade the controller
+            creepRoutineFunctions.upgrade_controller(creep);
+          } else { // There was something to build
+            creepRoutineFunctions.build_to(creep, target);
+          }
+        } else { // There was something to repair
+          creepRoutineFunctions.repair_to(creep, target, repair_color);
+        }
       }
-
     },
     function(room) { //numToBuild
       var level = roomVars[room][2];
@@ -127,9 +144,9 @@ module.exports = {
         case 1:
           return 1;
         case 2:
-          return 3;
+          return 2;
         default:
-          return 3;
+          return 2;
       }
     },
 
@@ -141,7 +158,7 @@ module.exports = {
         case 2:
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]; //550 pts
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -174,8 +191,10 @@ module.exports = {
           return 2;
         case 1:
           return 3;
+        case 3:
+          return 4;
         default:
-          return 3;
+          return 4;
       }
     },
 
@@ -187,7 +206,7 @@ module.exports = {
         case 2:
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]; //550 pts
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }

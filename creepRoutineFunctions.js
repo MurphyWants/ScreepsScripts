@@ -1,13 +1,13 @@
 module.exports = {
   move: function(creep, target) {
     creep.moveTo(target, {
-      reusePath: 50
+      reusePath: 25
     });
     return 0;
   },
   move: function(creep, target, color) {
     creep.moveTo(target, {
-      reusePath: 50,
+      reusePath: 25,
       visualizePathStyle: {
         stroke: color,
         opacity: .5
@@ -58,7 +58,6 @@ module.exports = {
         var struct = structure.structureType;
         switch (struct) {
           case "tower":
-          case "constructedWall":
           case "extension":
           case "controller":
           case "spawn":
@@ -67,6 +66,8 @@ module.exports = {
           case "container":
           case "road":
             return (structure.hits < (structure.hitsMax * (3 / 4)));
+          case "constructedWall":
+            return (structure.hits < 10000);
           default:
             return false;
         }
@@ -122,11 +123,9 @@ module.exports = {
     if (creep.carry.energy == 0)
       creep.memory.isFull = false;
   },
-  testfn: function() {
-    console.log("2");
-  },
-  otherfn: function() {
-    this.testfn();
-    return 2;
+  idle: function(creep) {
+    var room = creep.room.name;
+    var flag = roomVars[room][0];
+    this.move(creep, Game.flags[flag]);
   }
 }
