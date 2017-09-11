@@ -34,19 +34,20 @@ module.exports = {
         case 1:
           return 2;
         case 2:
-          return 3;
+          return 2;
         default:
-          return 3;
+          return 2;
       }
     },
     function(room) { //body
       var level = roomVars[room][2];
 
       switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-        case 4:
-          return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -78,11 +79,9 @@ module.exports = {
         case 0:
           return 0;
         case 1:
-          return 3;
-        case 2:
-          return 5;
+          return 2
         default:
-          return 5;
+          return 2;
       }
     },
 
@@ -90,10 +89,11 @@ module.exports = {
       var level = roomVars[room][2];
 
       switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-        case 4:
-          return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+          return [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -127,9 +127,9 @@ module.exports = {
         case 1:
           return 1;
         case 2:
-          return 2;
+          return 3;
         default:
-          return 2;
+          return 3;
       }
     },
 
@@ -137,10 +137,11 @@ module.exports = {
       var level = roomVars[room][2];
 
       switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-        case 4:
-          return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -170,13 +171,11 @@ module.exports = {
 
       switch (level) {
         case 0:
-          return 0;
-        case 1:
           return 2;
-        case 2:
-          return 4;
+        case 1:
+          return 3;
         default:
-          return 6;
+          return 3;
       }
     },
 
@@ -184,10 +183,11 @@ module.exports = {
       var level = roomVars[room][2];
 
       switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-          return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-        case 4:
-          return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
