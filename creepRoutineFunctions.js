@@ -67,7 +67,7 @@ module.exports = {
           case "road":
             return (structure.hits < (structure.hitsMax * (3 / 4)));
           case "constructedWall":
-            return (structure.hits < 10000);
+            return (structure.hits < 100000);
           default:
             return false;
         }
