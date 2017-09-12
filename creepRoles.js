@@ -2,402 +2,214 @@
 "role" : [action(), numToBuild(), parts()]
 
 use: role["rolename"][num](creep)
-ex: role["harvester-home"][0](creep) == creep action
-ex: role["harvester-home"][1] == numToBuild
+ex: role["harvester-general"][0](creep) == creep action
+ex: role["harvester-general"][1] == numToBuild
+ex: role["harvester-general"][2] == creepParts
 */
 
 module.exports = {
-    "harvester-home": [ //Harvest role but only delivers to home
-        function(creep) { //action
+  "builder": [ // Buidler Role
+    function(creep) { //action
+      const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
+      const home = Game.spawns[creep.memory.home];
+      var target = creepRoutineFunctions.find_build(creep);
+      var harvest_color = "#32CD32"; // trail color when going to harvest, green
+      var build_color = "#DC7633"; // orange
 
-            const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
-            const home = Game.spawns[creep.memory.home];
+      if (creep.memory.isFull == undefined)
+        creep.memory.isFull = false;
 
-            if (creep.memory.isFull == undefined)
-                creep.memory.isFull = false;
-
-            if (!creep.memory.isFull) {
-                if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(src, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#32CD32'
-                        }
-                    });
-                }
-                if (creep.carry.energy == creep.carryCapacity)
-                    creep.memory.isFull = true;
-            }
-
-            if (creep.memory.isFull) {
-                if (creep.transfer(home, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(home, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#008000'
-                        }
-                        //
-                    });
-                }
-
-                if (creep.carry.energy == 0)
-                    creep.memory.isFull = false;
-            }
-
-
-
-        },
-        function(room) { //numToBuild
-            var level = roomVars[room][2];
-
-            switch (level) {
-                case 0:
-                    return 4;
-                case 1:
-                    return 3;
-                case 2:
-                    return 1;
-                default:
-                    return 1;
-            }
-        },
-
-        function(room) { //parts
-            var level = roomVars[room][2];
-
-            switch (level) {
-                case 3:
-                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-                case 4:
-                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
-                default:
-                    return [WORK, CARRY, MOVE]; // 200 pts
-            }
+      if (!creep.memory.isFull) { // Fill energy
+        creepRoutineFunctions.harvest(creep, src, harvest_color);
+      } else { // Energy is filled
+        if (target == null) { // Check if there is anything to build
+          target = creepRoutineFunctions.find_repair(creep);
+          if (target == null) { // Check if there is anything to repair
+            creepRoutineFunctions.upgrade_controller(creep); // Nothing to repair, go help build controller
+          } else { // There was something to repair
+            creepRoutineFunctions.repair_to(creep, target);
+          }
+        } else { // There was something to build
+          creepRoutineFunctions.build_to(creep, target, build_color);
         }
-    ],
-    "builder": [ // Buidler Role
-        function(creep) { //action
-            const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
-            const home = Game.spawns[creep.memory.home];
+      }
+    },
+    function(room) { //num to build
+      var level = roomVars[room][2];
 
-            if (creep.memory.isFull == undefined)
-                creep.memory.isFull = false;
+      switch (level) {
+        case 0:
+          return 0;
+        case 1:
+          return 2;
+        case 2:
+          return 2;
+        default:
+          return 2;
+      }
+    },
+    function(room) { //body
+      var level = roomVars[room][2];
 
-            //creep.say(creep.memory.isFull);
+      switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
+        case 3:
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
+        default:
+          return [WORK, CARRY, MOVE]; // 200 pts
+      }
+    }
+  ],
+  "harvest-controller": [ //Harvest role but only delivers to controller
+    function(creep) { //action
 
-            if (!creep.memory.isFull) {
-                if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(src, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#32CD32'
-                        }
-                    });
-                }
-                if (creep.carry.energy == creep.carryCapacity)
-                    creep.memory.isFull = true;
-            }
+      const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
+      const home = Game.spawns[creep.memory.home];
+      var harvest_color = "#32CD32"; // trail color when going to harvest, green
+      var controller_color = "#F1C40F"; // yellow
 
-            var target = creep.room.find(FIND_CONSTRUCTION_SITES);
+      if (creep.memory.isFull == undefined)
+        creep.memory.isFull = false;
 
-            if (creep.memory.isFull) {
-                if (target[0] == undefined) {
-                    creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#9400d3'
-                        }
-                    });
-                }
-                if (creep.carry.energy == 0)
-                    creep.memory.isFull = false;
-                if (creep.build(target[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target[0], {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#000000'
-                        }
-                    });
-                }
-            }
-        },
-        function(room) { //num to build
-            var level = roomVars[room][2];
+      if (!creep.memory.isFull) {
+        creepRoutineFunctions.harvest(creep, src, harvest_color);
+      } else {
+        creepRoutineFunctions.upgrade_controller(creep, controller_color);
+      }
 
-            switch (level) {
-                case 0:
-                    return 0;
-                case 1:
-                    return 2;
-                case 2:
-                    return 3;
-                default:
-                    return 3;
-            }
-        },
-        function(room) { //body
-            var level = roomVars[room][2];
 
-            switch (level) {
-                case 3:
-                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-                case 4:
-                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
-                default:
-                    return [WORK, CARRY, MOVE]; // 200 pts
-            }
+    },
+    function(room) { //numToBuild
+      var level = roomVars[room][2];
+
+      switch (level) {
+        case 0:
+          return 0;
+        case 1:
+          return 2
+        default:
+          return 2;
+      }
+    },
+
+    function(room) { //parts
+      var level = roomVars[room][2];
+
+      switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
+        case 3:
+          return [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]; //550 pts
+        default:
+          return [WORK, CARRY, MOVE]; // 200 pts
+      }
+    }
+  ],
+  "repairer": [ // repair role
+    function(creep) { //action
+
+      const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
+      const home = Game.spawns[creep.memory.home];
+      var target = creepRoutineFunctions.find_repair(creep);
+      var harvest_color = "#32CD32"; // trail color when going to harvest, green
+      var repair_color = "#154360"; // blue
+
+      if (creep.memory.isFull == undefined)
+        creep.memory.isFull = false;
+
+      if (!creep.memory.isFull) { // Fill Energy
+        creepRoutineFunctions.harvest(creep, src, harvest_color);
+      } else { // Once filled, go repair
+        if (target == null) { // if nothing to repair, find something to build
+          target = creepRoutineFunctions.find_build(creep);
+          if (target == null) { // If there is nothing to build, go help upgrade the controller
+            creepRoutineFunctions.upgrade_controller(creep);
+          } else { // There was something to build
+            creepRoutineFunctions.build_to(creep, target);
+          }
+        } else { // There was something to repair
+          creepRoutineFunctions.repair_to(creep, target, repair_color);
         }
-    ],
-    "harvest-controller": [ //Harvest role but only delivers to controller
-        function(creep) { //action
+      }
+    },
+    function(room) { //numToBuild
+      var level = roomVars[room][2];
 
-            const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
-            const home = Game.spawns[creep.memory.home];
+      switch (level) {
+        case 0:
+          return 0;
+        case 1:
+          return 1;
+        case 2:
+          return 2;
+        default:
+          return 2;
+      }
+    },
 
-            if (creep.memory.isFull == undefined)
-                creep.memory.isFull = false;
+    function(room) { //parts
+      var level = roomVars[room][2];
 
-            if (!creep.memory.isFull) {
-                if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(src, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#32CD32'
-                        }
-                    });
-                }
-                if (creep.carry.energy == creep.carryCapacity)
-                    creep.memory.isFull = true;
-            }
+      switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
+        case 3:
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
+        default:
+          return [WORK, CARRY, MOVE]; // 200 pts
+      }
+    }
+  ],
+  "harvest-general": [ //Harvest role for everything else
+    function(creep) { //action
 
-            if (creep.memory.isFull) {
-                if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.room.controller, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#008000'
-                        }
-                    });
-                }
+      const src = creep.room.find(FIND_SOURCES)[creep.memory.src]; //energy source
+      const home = Game.spawns[creep.memory.home]; //spawn
+      var target = creepRoutineFunctions.find_transfer(creep); // target to fill
+      var harvest_color = "#32CD32"; // trail color when going to harvest, green
+      var transfer_color = "#FF0000"; // red
 
-                if (creep.carry.energy == 0)
-                    creep.memory.isFull = false;
-            }
+      if (creep.memory.isFull == undefined)
+        creep.memory.isFull = false;
 
+      if (!creep.memory.isFull) {
+        creepRoutineFunctions.harvest(creep, src, harvest_color);
+      } else {
+        creepRoutineFunctions.transfer_to(creep, target, transfer_color);
+      }
 
+    },
+    function(room) { //numToBuild
+      var level = roomVars[room][2];
 
-        },
-        function(room) { //numToBuild
-            var level = roomVars[room][2];
+      switch (level) {
+        case 0:
+          return 2;
+        case 1:
+          return 3;
+        case 3:
+          return 4;
+        default:
+          return 4;
+      }
+    },
 
-            switch (level) {
-                case 0:
-                    return 0;
-                case 1:
-                    return 3;
-                case 2:
-                    return 5;
-                default:
-                    return 5;
-            }
-        },
+    function(room) { //parts
+      var level = roomVars[room][2];
 
-        function(room) { //parts
-            var level = roomVars[room][2];
-
-            switch (level) {
-                case 3:
-                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-                case 4:
-                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
-                default:
-                    return [WORK, CARRY, MOVE]; // 200 pts
-            }
-        }
-    ],
-    "repairer": [ // repair role
-        function(creep) { //action
-
-            const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
-            const home = Game.spawns[creep.memory.home];
-
-            if (creep.memory.isFull == undefined)
-                creep.memory.isFull = false;
-
-            if (!creep.memory.isFull) {
-                if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(src, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#32CD32'
-                        }
-                    });
-                }
-                if (creep.carry.energy == creep.carryCapacity)
-                    creep.memory.isFull = true;
-            }
-
-            var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: function(structure) {
-                    return structure.hits < 1000;
-                }
-            });
-
-            if (creep.memory.isFull) {
-                if (target == null) {
-                    target = creep.room.find(FIND_CONSTRUCTION_SITES);
-                    if (target[0] == undefined) {
-                        creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
-                             reusePath: 25,
-                            visualizePathStyle: {
-                                stroke: '#9400d3'
-                            }
-                        });
-                    } else if (creep.build(target[0]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target[0], {
-                             reusePath: 25,
-                            visualizePathStyle: {
-                                stroke: '#000000'
-                            }
-                        });
-                    }
-
-                }
-                if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#008000'
-                        }
-                    });
-                }
-
-                if (creep.carry.energy == 0)
-                    creep.memory.isFull = false;
-            }
-
-
-
-        },
-        function(room) { //numToBuild
-            var level = roomVars[room][2];
-
-            switch (level) {
-                case 0:
-                    return 0;
-                case 1:
-                    return 1;
-                case 2:
-                    return 2;
-                default:
-                    return 2;
-            }
-        },
-
-        function(room) { //parts
-            var level = roomVars[room][2];
-
-            switch (level) {
-                case 3:
-                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-                case 4:
-                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
-                default:
-                    return [WORK, CARRY, MOVE]; // 200 pts
-            }
-        }
-    ],
-    "harvest-general": [ //Harvest role for everything else
-        function(creep) { //action
-
-            const src = creep.room.find(FIND_SOURCES)[creep.memory.src];
-            const home = Game.spawns[creep.memory.home];
-
-            if (creep.memory.isFull == undefined)
-                creep.memory.isFull = false;
-
-            if (!creep.memory.isFull) {
-                if (creep.harvest(src) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(src, {
-                         reusePath: 25,
-                        visualizePathStyle: {
-                            stroke: '#32CD32'
-                        }
-                    });
-                }
-                if (creep.carry.energy == creep.carryCapacity)
-                    creep.memory.isFull = true;
-            }
-
-            var target = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_EXTENSION || structure.structureType == STRUCTURE_SPAWN) &&
-                        structure.energy < structure.energyCapacity;
-                }
-            });
-
-            if (creep.memory.isFull) {
-                if (target.length > 0) {
-                    if (creep.transfer(target[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target[0], {
-                             reusePath: 25,
-                            visualizePathStyle: {
-                                stroke: '#008000'
-                            }
-                        });
-                    }
-                } else {
-                    target = creep.room.find(FIND_CONSTRUCTION_SITES);
-                    if (target[0] == undefined) {
-                        creep.moveTo(Game.flags[roomVars[creep.room.name][0]], {
-                             reusePath: 25,
-                            visualizePathStyle: {
-                                stroke: '#9400d3'
-                            }
-                        });
-                    } else if (creep.build(target[0]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(target[0], {
-                             reusePath: 25,
-                            visualizePathStyle: {
-                                stroke: '#000000'
-                            }
-                        });
-                    }
-                }
-
-                if (creep.carry.energy == 0)
-                    creep.memory.isFull = false;
-            }
-
-
-
-        },
-        function(room) { //numToBuild
-            var level = roomVars[room][2];
-
-            switch (level) {
-                case 0:
-                    return 0;
-                case 1:
-                    return 2;
-                case 2:
-                    return 4;
-                default:
-                    return 6;
-            }
-        },
-
-        function(room) { //parts
-            var level = roomVars[room][2];
-
-            switch (level) {
-                case 3:
-                    return [WORK, CARRY, CARRY, MOVE, MOVE]; //300 pts
-                case 4:
-                    return [WORK, WORK, CARRY, CARRY, MOVE, MOVE]; // 400 pts
-                default:
-                    return [WORK, CARRY, MOVE]; // 200 pts
-            }
-        }
-    ]
+      switch (level) {
+        case 1:
+        case 2:
+          return [WORK, CARRY, MOVE]; // 200 pts
+        case 3:
+          return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
+        default:
+          return [WORK, CARRY, MOVE]; // 200 pts
+      }
+    }
+  ]
 };
