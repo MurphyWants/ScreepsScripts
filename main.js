@@ -19,8 +19,17 @@ module.exports.loop = function() {
     if (!(role == "none"))
       creepRoles[role][0](creep);
   }
-  if (!(Game.time % 10))
+  if (!(Game.time % 10)){
     replace();
+    /*blue_flags = Game.flags.filter( function(f){
+      return f.color == 3;
+    })
+    console.log(blue_flags);*/
+    for (var i in Game.flags){
+      if (Game.flags[i] == 3)
+        Game.flags[i].memory.creepAssigned = false;
+    }
+  }
 
   towerFunctions();
 }

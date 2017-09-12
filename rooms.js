@@ -3,7 +3,7 @@ module.exports = {
 }
 /* Default
   similar to how roles works
-  "roomname" : [waitFlat, spawn, level]
+  "roomname" : [waitFlag, spawn, level]
 
   waitFlag = "name"
   spawn

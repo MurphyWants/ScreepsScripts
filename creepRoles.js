@@ -180,9 +180,17 @@ module.exports = {
       if (!creep.memory.isFull) {
         creepRoutineFunctions.harvest(creep, src, harvest_color);
       } else {
-        creepRoutineFunctions.transfer_to(creep, target, transfer_color);
+        if (target == undefined) {
+          target = creepRoutineFunctions.find_repair(creep);
+          if (target == undefined) {
+          creepRoutineFunctions.upgrade_controller(creep);
+        } else {
+          creepRoutineFunctions.repair_to(creep, target);
+        }
+        } else {
+          creepRoutineFunctions.transfer_to(creep, target, transfer_color);
+        }
       }
-
     },
     function(room) { //numToBuild
       var level = roomVars[room][2];
@@ -194,9 +202,9 @@ module.exports = {
         case 2:
           return 3;
         case 3:
-          return 4;
+          return 5;
         default:
-          return 4;
+          return 5;
       }
     },
 
@@ -211,6 +219,90 @@ module.exports = {
           return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
+      }
+    }
+  ],
+  "patrol": [
+    function(creep) { // routine
+      var blue_flags;
+      try {
+        blue_flags = Game.rooms[room].find(FIND_FLAGS, {
+          filter: (f) => {
+            return (f.color == 3); // 3 == blue
+          }
+        });
+
+        function filterArr(f) {
+          if (f.memory.creepAssigned == undefined) {
+            f.memory.creepAssigned = false;
+          }
+          return (!f.memory.creepAssigned);
+        }
+
+        if (blue_flags == undefined) {
+          blue_flags = Game.flags[roomVars[creep.room][0]];
+        } else {
+
+          blue_flags.filter(filterArr);
+
+          blue_flags.memory.creepAssigned = creep.name;
+        }
+      } catch (err) {
+        blue_flags = Game.flags[roomVars[creep.room.name][0]];
+      }
+      var enemies = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+
+      if (creep.memory.mode == undefined)
+        creep.memory.mode = "guard";
+
+      if (enemies == undefined) {
+        if (creep.carry.energy == false) {
+          creep.memory.mode = "harvest";
+        } else {
+          creep.memory.mode = "guard";
+        }
+      } else {
+        creep.memory.mode = "attack";
+      }
+
+      switch (creep.memory.mode) {
+        case "harvest":
+          creepRoutineFunctions.harvest(creep, creep.pos.findClosestByRange(FIND_SOURCES));
+          break;
+        case "guard":
+          creepRoutineFunctions.move(creep, blue_flags);
+          break;
+        case "attack":
+          if (creep.attack(enemies) == ERR_NOT_IN_RANGE) {
+            if (creep.rangedAttack(enemies) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(enemies, {
+                reusePath: 2
+              });
+            }
+          }
+          break;
+      }
+
+
+    },
+    function(room) { // num to build
+      var level = roomVars[room][2];
+      var blue_flags = Game.rooms[room].find(FIND_FLAGS, {
+        filter: (f) => {
+          return (f.color == 3); // 3 == blue
+        }
+      });
+      switch (level) {
+        case 3:
+          return (1 * blue_flags.length);
+        default:
+          return 0;
+      }
+    },
+    function(room) { // parts
+      var level = roomVars[room][2];
+      switch (level) {
+        default: return [WORK, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK]; // 990 Energy
       }
     }
   ]
