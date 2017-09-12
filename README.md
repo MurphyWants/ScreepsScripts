@@ -1,22 +1,21 @@
-Work in progress scripts for the game screeps Most of this was thrown together to make it work. Some of it needs to be cleaned up, most of it needs to be reorganized. Example: I don't need 17 creeps spawned, yet I have 17 creeps spawned. I'll fix that later.
-
-# Creep Roles
+Work in progress scripts for the game screeps Most of this was thrown together to make it work. 
 
 ## TODO
 - Write better tower functions
-	- Right now it just repairs
-
-- Fix num to build to be more realistic
-
-- Fix parts to be more efficient and make bigger creeps
-
-  - Also each creep has the same parts to build right now, need to figure out a good setup per each role
-  - Harvester-controller should have more MOVE than CARRY or WORK
-  - Harvester-general should have more CARRY and WORK than MOVE
+- Right now it just repairs
 
 - Figure out an offensive and defensive strategy
 
 Roles are in order that I defined them in creepRoles.js. Pardon if it seems like it is disorganized, will reorganize later.
+
+## Work In progress
+#### Todo list things that have been started and waiting to see how it finished
+- Fix num to build to be more realistic
+
+- Fix parts to be more efficient and make bigger creeps
+
+# Creep Roles
+
 
 ## builder
 
@@ -238,6 +237,13 @@ What I want to do later, after thinking this out
     - Controller Level 3
     - Max Extensions Built
   - Spawner: 300 Energy + 10 Extensions 50 Each = 800 Total
+	- Keep the same parts as level 3
+
+- Level 5
+	- Needed
+		- Controller Level 4
+		- Max Extensions Built
+	- Spawner: 300 Energy + 20 Extensions 50 Each = 1300 Total
 
 # Functions and other scripts used
 
