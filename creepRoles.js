@@ -102,6 +102,7 @@ module.exports = {
         case 2:
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
+        case 4:
           return [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]; //550 pts
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
@@ -190,6 +191,7 @@ module.exports = {
         case 0:
           return 2;
         case 1:
+        case 2:
           return 3;
         case 3:
           return 4;

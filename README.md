@@ -1,10 +1,12 @@
-Work in progress scripts for the game screeps Most of this was thrown together to make it work. 
+Work in progress scripts for the game screeps Most of this was thrown together to make it work.
 
 ## TODO
 - Write better tower functions
 - Right now it just repairs
 
 - Figure out an offensive and defensive strategy
+
+- Flag definitions
 
 Roles are in order that I defined them in creepRoles.js. Pardon if it seems like it is disorganized, will reorganize later.
 
@@ -23,52 +25,41 @@ Description: Builder role for building structures
 
 - Routines
 
-  - Fill Energy From Source
+  - Harvest Energy From Source
   - Build Structures
-
-    - If there is nothing to build, go wait by the wait flag
-
-      - Reason: Instead of waiting in the mess, go wait elsewhere to make it cleaner
+  - If there is nothing to build, find something to repair
+  - If there is nothing to repair, help upgrade the controller
 
 - Num to build - level:number
 
   - 0:0
   - 1:2
-  - 2:3
-  - default:3
+  - 2:2
+  - default:2
 
 - Parts to build - level:[parts]
-
-  - 3:[WORK, CARRY, CARRY, MOVE, MOVE]
-  - 4:[WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+  - 1 and 2: [WORK, CARRY, MOVE] : 200 Energy
+  - 3: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE] : 550 Energy
   - Default:[WORK, CARRY, MOVE]
 
 ## harvest-controller
 
-Description: A harvest role designed to get feed and upgrade the controller. As opposed to harvest-home, this actually serves a purpose.
-
-- TODO
-
-  - Make the creep faster and to get to and from the controller really quick. I think being quicker to fill the controller will be better than more at once.
-
-    - Reason: So the controller won't degrade
+Description: A harvest role designed to get feed and upgrade the controller.
 
 - Routines
 
-  - Get energy from source
-  - Bring energy to controller
+  - Harvest energy from source
+  - Upgrad the controller
 
 - Num to build - level:number
 
   - 0:0
-  - 1:3
-  - 2:5
-  - default:5
+  - 1:2
+  - default:2
 
 - Parts to build - level:[parts]
-
-  - 3:[WORK, CARRY, CARRY, MOVE, MOVE]
-  - 4:[WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+  - 1 and 2: [WORK, CARRY, MOVE] : 200 Energy
+  - 3 and 4: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE] : 800 Energy
   - Default:[WORK, CARRY, MOVE]
 
 ## repairer
@@ -77,13 +68,10 @@ Description: Role to repair structures that degrade
 
 - Routines
 
-  - Get energy from source
-  - Check if there exist a structure with 3/4 heath
-
-    - True: Go fix it
-    - False: Help build
-
-      - IF nothing to build, go to wait flag
+  - Harvest energy from source
+  - Repair structures
+  - If there is nothing to repair, help build structures
+  - If there is nothing to build, help upgrade the controller
 
 - Num to build - level:number
 
@@ -94,8 +82,8 @@ Description: Role to repair structures that degrade
 
 - Parts to build - level:[parts]
 
-  - 3:[WORK, CARRY, CARRY, MOVE, MOVE]
-  - 4:[WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+  - 1 or 2: [WORK, CARRY, MOVE] : 200 Energy
+  - 3:[WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE] : 550 Energy
   - Default:[WORK, CARRY, MOVE]
 
 ## harvest-general
@@ -104,25 +92,21 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Routines:
 
-  - Get energy from source
-  - Check if theres something that needs energy
-
-    - True: Fill it
-    - False: Help build
-
-      - If nothing to build, go to wait flag
+  - Harvest energy from source
+  - Transfer energy to structures that need it (spawners, extensions, towers etc)
 
 - Num to build - level:number
 
-  - 0:0
-  - 1:2
-  - 2:4
-  - default:6
+  - 0:2
+  - 1:3
+  - 2:3
+  - 3:4
+  - default:4
 
 - Parts to build - level:[parts]
 
-  - 3:[WORK, CARRY, CARRY, MOVE, MOVE]
-  - 4:[WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+  - 1 or 2: [WORK, CARRY, MOVE] : 200 Energy
+  - 3: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE] : 550 Energy
   - Default:[WORK, CARRY, MOVE]
 
 # Room Definitions
@@ -140,33 +124,31 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 0
 
-  - Creep Builds - Total: 0
+  - Creep Builds - Total: 2
+    - Harvest-General: 2
 
   - Creep Parts
-
     - Default: [WORK, CARRY, MOVE]
 
 - Level 1
 
   - Creep Builds - Total: 8
-
     - Builder: 2
-    - Harvest-Controller: 3
+    - Harvest-Controller: 2
     - Repairer: 1
-    - Harvest-General: 2
+    - Harvest-General: 3
 
   - Creep Parts
-
     - Default: [WORK, CARRY, MOVE]
 
 - Level 2
 
-  - Creep Builds - Total: 14
+  - Creep Builds - Total: 9
 
-    - Builder: 3
-    - Harvest-Controller: 5
+    - Builder: 2
+    - Harvest-Controller: 2
     - Repairer: 2
-    - Harvest-General: 4
+    - Harvest-General: 3
 
   - Creep Parts
 
@@ -174,29 +156,22 @@ Description: Harvest role that gets energy and places it where needed: Spawn, st
 
 - Level 3
 
-  - Creep Builds - Total: 14
+  - Creep Builds - Total: 10
 
-    - Builder: 3
-    - harvest-controller: 5
+    - Builder: 2
+    - harvest-controller: 2
     - Repairer: 2
     - Harvest-General: 4
 
   - Creep Parts
 
-    - Default: [WORK, CARRY, CARRY, MOVE, MOVE]
+    - Builder, Repairer, harvest-general: [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+    - harvest-controller: [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
+    -
 
 - Level 4
 
-  - Creep Builds - Total: 16
-
-    - Builder: 3
-    - harvest-controller: 5
-    - Repairer: 2
-    - Harvest-General: 6
-
-  - Creep Parts
-
-    - Default: [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+#### TODO
 
 ## What should be defined
 What I want to do later, after thinking this out
