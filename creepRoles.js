@@ -222,7 +222,7 @@ module.exports = {
       }
     }
   ],
-  "patrol": [
+  "patrol": [ // General gaurd unit
     function(creep) { // routine
       var blue_flags;
       try {
