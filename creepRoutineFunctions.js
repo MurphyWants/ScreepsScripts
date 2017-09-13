@@ -106,18 +106,18 @@ module.exports = {
     if (creep.carry.energy == 0)
       creep.memory.isFull = false;
   },
-  find_build: function(creep){
+  find_build: function(creep) {
     return creep.room.find(FIND_CONSTRUCTION_SITES)[0];
   },
-  build_to: function(creep, target){
-    if (creep.build(target) == ERR_NOT_IN_RANGE){
+  build_to: function(creep, target) {
+    if (creep.build(target) == ERR_NOT_IN_RANGE) {
       this.move(creep, target);
     }
     if (creep.carry.energy == 0)
       creep.memory.isFull = false;
   },
-  build_to: function(creep, target, color){
-    if (creep.build(target) == ERR_NOT_IN_RANGE){
+  build_to: function(creep, target, color) {
+    if (creep.build(target) == ERR_NOT_IN_RANGE) {
       this.move(creep, target, color);
     }
     if (creep.carry.energy == 0)
@@ -127,5 +127,12 @@ module.exports = {
     var room = creep.room.name;
     var flag = roomVars[room][0];
     this.move(creep, Game.flags[flag]);
+  },
+  find_flag_by_color(room, color) {
+    return Game.rooms[room].find(FIND_FLAGS, {
+      filter: (flag) => {
+        return flag.color == color
+      }
+    });
   }
 }
