@@ -294,7 +294,7 @@ module.exports = {
       });
       switch (level) {
         case 3:
-          return (1 * blue_flags.length);
+          return 1;
         default:
           return 0;
       }
