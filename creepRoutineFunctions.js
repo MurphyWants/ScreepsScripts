@@ -62,10 +62,10 @@ module.exports = {
           case "controller":
           case "spawn":
             return (structure.hits < structure.hitsMax);
-          case "rampart":
           case "container":
           case "road":
             return (structure.hits < (structure.hitsMax * (3 / 4)));
+            case "rampart":
           case "constructedWall":
             return (structure.hits < 200000);
           default:
