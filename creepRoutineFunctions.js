@@ -134,5 +134,9 @@ module.exports = {
         return flag.color == color
       }
     });
+  },
+  test_path: function(target1, target2){
+    path = target1.pos.findPathTo(target2);
+    console.log(path.length)
   }
 }

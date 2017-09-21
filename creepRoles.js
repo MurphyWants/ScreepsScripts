@@ -23,11 +23,16 @@ module.exports = {
         creepRoutineFunctions.harvest(creep, src, harvest_color);
       } else { // Energy is filled
         if (target == null) { // Check if there is anything to build
-          target = creepRoutineFunctions.find_repair(creep);
-          if (target == null) { // Check if there is anything to repair
-            creepRoutineFunctions.upgrade_controller(creep); // Nothing to repair, go help build controller
-          } else { // There was something to repair
-            creepRoutineFunctions.repair_to(creep, target);
+          target = creepRoutineFunctions.find_transfer(creep);
+          if (target == null) {
+            target = creepRoutineFunctions.find_repair(creep);
+            if (target == null) { // Check if there is anything to repair
+              creepRoutineFunctions.upgrade_controller(creep); // Nothing to repair, go help build controller
+            } else { // There was something to repair
+              creepRoutineFunctions.repair_to(creep, target);
+            }
+          } else {
+            creepRoutineFunctions.transfer_to(creep, target);
           }
         } else { // There was something to build
           creepRoutineFunctions.build_to(creep, target, build_color);
@@ -57,6 +62,8 @@ module.exports = {
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
           return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
+        case 4:
+          return [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -102,8 +109,9 @@ module.exports = {
         case 2:
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
-        case 4:
           return [WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]; //550 pts
+        case 4:
+          return [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -125,11 +133,16 @@ module.exports = {
         creepRoutineFunctions.harvest(creep, src, harvest_color);
       } else { // Once filled, go repair
         if (target == null) { // if nothing to repair, find something to build
-          target = creepRoutineFunctions.find_build(creep);
-          if (target == null) { // If there is nothing to build, go help upgrade the controller
-            creepRoutineFunctions.upgrade_controller(creep);
-          } else { // There was something to build
-            creepRoutineFunctions.build_to(creep, target);
+          target = creepRoutineFunctions.find_transfer(creep)
+          if (target == null) { // Check if there is something that needs energy
+            target = creepRoutineFunctions.find_build(creep);
+            if (target == null) { // If there is nothing to build, go help upgrade the controller
+              creepRoutineFunctions.upgrade_controller(creep);
+            } else { // There was something to build
+              creepRoutineFunctions.build_to(creep, target);
+            }
+          } else {
+            creepRoutineFunctions.transfer_to(creep, target);
           }
         } else { // There was something to repair
           creepRoutineFunctions.repair_to(creep, target, repair_color);
@@ -160,6 +173,8 @@ module.exports = {
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
           return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
+        case 4:
+          return [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE];
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -183,10 +198,10 @@ module.exports = {
         if (target == undefined) {
           target = creepRoutineFunctions.find_repair(creep);
           if (target == undefined) {
-          creepRoutineFunctions.upgrade_controller(creep);
-        } else {
-          creepRoutineFunctions.repair_to(creep, target);
-        }
+            creepRoutineFunctions.upgrade_controller(creep);
+          } else {
+            creepRoutineFunctions.repair_to(creep, target);
+          }
         } else {
           creepRoutineFunctions.transfer_to(creep, target, transfer_color);
         }
@@ -217,6 +232,8 @@ module.exports = {
           return [WORK, CARRY, MOVE]; // 200 pts
         case 3:
           return [WORK, WORK, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]; //550 pts
+        case 4:
+          return [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]; //1100
         default:
           return [WORK, CARRY, MOVE]; // 200 pts
       }
@@ -294,6 +311,7 @@ module.exports = {
       });
       switch (level) {
         case 3:
+        case 4:
           return 1;
         default:
           return 0;
@@ -302,7 +320,7 @@ module.exports = {
     function(room) { // parts
       var level = roomVars[room][2];
       switch (level) {
-        default: return [WORK, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK]; // 990 Energy
+        default: return [WORK, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, ATTACK, ATTACK, ATTACK, RANGED_ATTACK, RANGED_ATTACK]; // 990 Energy
       }
     }
   ]

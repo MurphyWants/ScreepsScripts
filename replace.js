@@ -53,6 +53,7 @@ module.exports = function() {
     for (var i in Memory.creeps) {
         var creep = Game.creeps[i];
         if (!creep) {
+            console.log(Memory.creeps[i].role);
             delete Memory.creeps[i];
             console.log("Deleting creep: " + i);
         }
