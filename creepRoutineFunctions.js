@@ -138,5 +138,8 @@ module.exports = {
   test_path: function(target1, target2){
     path = target1.pos.findPathTo(target2.pos);
     console.log("Total points: " ,path.length);
+    for (var p in paths){
+      console.log("X: ", paths[p].x);
+    }
   }
 }
